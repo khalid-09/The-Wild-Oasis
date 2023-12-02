@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -23,3 +23,9 @@ const TableHeader = styled.header`
   color: var(--color-grey-600);
   padding: 1.6rem 2.4rem;
 `;
+
+const CabinTable = () => {
+  return <div>CabinTable</div>;
+};
+
+export default CabinTable;
