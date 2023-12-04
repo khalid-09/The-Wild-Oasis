@@ -22,19 +22,31 @@ export const deleteCabins = async id => {
   return data;
 }; // delete a row from cabins table which paased id
 
-export const createCabin = async newCabin => {
+export const createEditCabin = async (newCabin, id) => {
+  const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
   // 0. Create a unique image name & path
   const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
     '/',
     ''
   );
-  const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+  const imagePath = hasImagePath
+    ? newCabin.image
+    : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
 
-  // 1. Create a cabin
-  const { data, error } = await supabase
-    .from('cabins')
-    .insert([{ ...newCabin, image: imagePath }])
-    .select();
+  // 1. Create/Edit a cabin
+  let query = supabase.from('cabins');
+
+  // A. CREATE
+  if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
+
+  // B.Edit
+  if (id)
+    query = query
+      .update({ ...newCabin, image: imagePath })
+      .eq('id', id)
+      .select();
+
+  const { data, error } = await query.select().single();
 
   if (error) {
     console.log(error);
