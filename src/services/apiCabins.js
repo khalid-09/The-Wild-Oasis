@@ -11,7 +11,7 @@ export const getCabins = async () => {
   return data;
 }; // read all row data from cabins table
 
-export const deleteCabins = async id => {
+export const deleteCabin = async id => {
   const { data, error } = await supabase.from('cabins').delete().eq('id', id);
 
   if (error) {
