@@ -24,6 +24,7 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
     formState: { errors },
   } = useForm({
     defaultValues: isEditSession ? editValues : {},
+    values: isEditSession ? editValues : {},
   });
 
   const isWorking = isCreating || isEditing;
