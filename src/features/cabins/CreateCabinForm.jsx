@@ -9,7 +9,7 @@ import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 import FormRow from '../../ui/FormRow';
 
-const CreateCabinForm = ({ cabinToEdit = {} }) => {
+const CreateCabinForm = ({ cabinToEdit = {}, onCloseModal }) => {
   const { createCabin, isCreating } = useCreateCabin();
   const { editCabin, isEditing } = useEditCabin();
 
@@ -37,6 +37,7 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
         {
           onSuccess: () => {
             reset();
+            onCloseModal?.();
           },
         }
       );
@@ -46,6 +47,7 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
         {
           onSuccess: () => {
             reset();
+            onCloseModal?.();
           },
         }
       );
@@ -56,7 +58,10 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      $type={onCloseModal ? 'modal' : ''}
+    >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           disabled={isWorking}
@@ -133,7 +138,11 @@ const CreateCabinForm = ({ cabinToEdit = {} }) => {
         />
       </FormRow>
       <FormRow>
-        <Button $variation="secondary" type="reset">
+        <Button
+          $variation="secondary"
+          type="reset"
+          onClick={() => onCloseModal?.()}
+        >
           Cancel
         </Button>
         <Button disabled={isWorking}>
