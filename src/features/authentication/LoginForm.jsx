@@ -14,7 +14,15 @@ function LoginForm() {
   function handleSubmit(e) {
     e.preventDefault();
     if (!email || !password) return;
-    login({ email, password });
+    login(
+      { email, password },
+      {
+        onSettled: () => {
+          setEmail('');
+          setPassword('');
+        },
+      }
+    );
   }
 
   return (
@@ -41,7 +49,9 @@ function LoginForm() {
         />
       </FormRowVertical>
       <FormRowVertical>
-        <Button size="large">{isLoading ? <SpinnerMini /> : 'Log in'}</Button>
+        <Button size="large" disabled={isLoading}>
+          {isLoading ? <SpinnerMini /> : 'Log in'}
+        </Button>
       </FormRowVertical>
     </Form>
   );
