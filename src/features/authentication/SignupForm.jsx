@@ -8,23 +8,18 @@ import { useSignup } from './useSignup';
 // Email regex: /\S+@\S+\.\S+/
 
 function SignupForm() {
-  const { isLoading, signup } = useSignup();
-  const {
-    register,
-    formState: { errors },
-    getValues,
-    reset,
-    handleSubmit,
-  } = useForm();
+  const { signup, isLoading } = useSignup();
+  const { register, formState, getValues, handleSubmit, reset } = useForm();
+  const { errors } = formState;
 
-  const onSubmit = ({ fullName, email, password }) => {
+  function onSubmit({ fullName, email, password }) {
     signup(
       { fullName, email, password },
       {
         onSettled: () => reset(),
       }
     );
-  };
+  }
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -46,7 +41,7 @@ function SignupForm() {
             required: 'This field is required',
             pattern: {
               value: /\S+@\S+\.\S+/,
-              message: 'Please enter a valid email address',
+              message: 'Please provide a valid email address',
             },
           })}
         />
@@ -64,7 +59,7 @@ function SignupForm() {
             required: 'This field is required',
             minLength: {
               value: 8,
-              message: 'Password must be at least be 8 characters long',
+              message: 'Password needs a minimum of 8 characters',
             },
           })}
         />
@@ -78,13 +73,19 @@ function SignupForm() {
           {...register('passwordConfirm', {
             required: 'This field is required',
             validate: value =>
-              value === getValues().password || 'Passwords do not match',
+              value === getValues().password || 'Passwords need to match',
           })}
         />
       </FormRow>
 
       <FormRow>
-        <Button $variation="secondary" type="reset" disabled={isLoading}>
+        {/* type is an HTML attribute! */}
+        <Button
+          variation="secondary"
+          type="reset"
+          disabled={isLoading}
+          onClick={reset}
+        >
           Cancel
         </Button>
         <Button disabled={isLoading}>Create new user</Button>
