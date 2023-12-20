@@ -1,5 +1,25 @@
 import supabase from './supabase';
 
+export const signup = async ({ fullName, email, password }) => {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      fullName,
+      avatar: '',
+    },
+  });
+
+  if (error) {
+    if (error.message.includes('unique')) {
+      throw new Error('User already exists');
+    }
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
 export const login = async ({ email, password }) => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
